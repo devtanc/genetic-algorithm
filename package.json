@@ -1,0 +1,12 @@
+{
+  "name": "genetic-algorithm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "algorithm.js",
+  "scripts": {
+    "start": "node algorithm.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
