@@ -33,17 +33,18 @@ candidates = candidates.sort(highToLow);
 candidates.forEach(candidate => {if(candidate.fitness === 2) found = true;})
 
 while(!found) {
-  console.log('//********** Generation', generation++, '**********//');
+  let sum = candidates.reduce(sumFitness, 0);
+  let avg = sum / candidates.length;
+  console.log('//********** Generation', generation++, '**********//', avg.toFixed(5));
   printCurrentGenerationShort(candidates);
   let next = candidates.slice(0,2);
   let children = createChildren(next.map(item => item.encoding));
-  console.log(children);
   candidates = candidates.map(candidate => candidate.encoding)
   candidates.splice(candidates.length - 2, 2, children[0], children[1]);
   candidates = candidates.map(encoding => { return {encoding}});
   candidates.forEach(candidate => calculateFitness(candidate));
   candidates = candidates.sort(highToLow);
-  candidates.forEach(candidate => {if(candidate.fitness === 2) found = true;})
+  candidates.forEach(candidate => {if(candidate.fitness === 2) found = true;});
 }
 
 candidates.forEach(candidate => {
@@ -53,6 +54,11 @@ candidates.forEach(candidate => {
     console.log(':::::: CANDIDATE FOUND ::::::');
   }
 });
+
+function sumFitness(a,b) {
+  if(b.fitness) return a + b.fitness
+  else return a
+}
 
 function randomizeCandidate() {
   let candidate = [];
@@ -99,7 +105,7 @@ function calculateFitness(candidate) {
       }
     }
     //Otherwise skip whatever the current item is
-    prev.penalty += 0.01;
+    prev.penalty += 0.05;
     return prev;
   }, {findInt: true, operand: undefined, value: undefined, penalty: 0});
   let fitness = 0;
@@ -130,12 +136,9 @@ function highToLow(a, b) {
 }
 
 function createChildren(set) {
-  console.log('Before crossover', set);
   set = crossover(set);
-  console.log('After crossover', set);
   if(Math.random() <= 0.4) {
     mutate(set);
-    console.log('Mutated set', set);
   }
   return set;
 }
